@@ -5,17 +5,16 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 /**
  * Get All Data
  */
 router.get('/query/all',function(req,res){
    connection.query('SELECT * FROM all_dogs',function(error,results){
-      res.send(results);
+	if (error){
+		console.log(error);
+	}
+     	 res.send(results);
    })
  });
 
@@ -40,7 +39,7 @@ function query(req,res,query){
   }
   if(query.dog_group){
     conditions.push("  dog_group = ?  ");
-    values.push(String(query.group));
+    values.push((query.dog_group));
   }
   if(query.breed){
     conditions.push("  BreedName = ?  ");
@@ -61,7 +60,7 @@ function query(req,res,query){
 
   conditions = conditions.join('AND');
   connection.query(`SELECT * FROM all_dogs WHERE ${conditions}`,values,(error,results)=>{
-    res.send(results);
+	 res.send(results);
   })
 }
 
